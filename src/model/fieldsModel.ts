@@ -4,7 +4,7 @@ type Field = { value: null | number };
 type Fields = Array<Field>;
 type FieldsModelStore = Array<Array<Field>>;
 
-export const fieldsModel = createStore<FieldsModelStore>([
+export const $fieldsModel = createStore<FieldsModelStore>([
   [{ value: null }, { value: null }, { value: null }, { value: null }],
   [{ value: null }, { value: null }, { value: null }, { value: null }],
   [{ value: null }, { value: null }, { value: null }, { value: null }],
@@ -19,17 +19,10 @@ export const moveTopEvent = createEvent();
 export const moveLeftEvent = createEvent();
 export const moveRightEvent = createEvent();
 
-const test = [
-  [{ value: null }, { value: 2 }, { value: null }, { value: null }],
-  [{ value: null }, { value: 2 }, { value: null }, { value: null }],
-  [{ value: null }, { value: null }, { value: null }, { value: null }],
-  [{ value: null }, { value: 8 }, { value: null }, { value: null }],
-];
-
 function changeOrientation(state: FieldsModelStore) {
   const result: any[] = [];
 
-  state.forEach((item, index) => {
+  state.forEach((item) => {
     item.forEach((item, index) => {
       if (!result[index]) {
         result[index] = [];
@@ -43,13 +36,15 @@ function changeOrientation(state: FieldsModelStore) {
 }
 
 function moveRight(state: FieldsModelStore) {
-  for (let i = 0; i < state.length; i++) {
-    const item = state[i];
+  const copyState = [...state];
+
+  for (let i = 0; i < copyState.length; i++) {
+    const item = copyState[i];
 
     const nulled = item.filter(fieldIsNotEmpty);
     const notNulled = item.filter(fieldIsEmpty);
 
-    state[i] = [...nulled, ...notNulled];
+    copyState[i] = [...nulled, ...notNulled];
 
     for (let j = 0; j < item.length; j++) {
       let prev: any = null;
@@ -73,16 +68,20 @@ function moveRight(state: FieldsModelStore) {
       }
     }
   }
+
+  return copyState;
 }
 
 function moveLeft(state: FieldsModelStore) {
-  for (let i = 0; i < state.length; i++) {
-    const item = state[i];
+  const copyState = [...state];
+
+  for (let i = 0; i < copyState.length; i++) {
+    const item = copyState[i];
 
     const nulled = item.filter(fieldIsNotEmpty);
     const notNulled = item.filter(fieldIsEmpty);
 
-    state[i] = [...notNulled, ...nulled];
+    copyState[i] = [...notNulled, ...nulled];
 
     for (let j = item.length - 1; j >= 0; j--) {
       let prev: any = null;
@@ -111,26 +110,22 @@ function moveLeft(state: FieldsModelStore) {
 
     state[i] = [...notNulled2, ...nulled2];
   }
+
+  return copyState;
 }
 
 function moveTop(state: FieldsModelStore) {
-  const copyState = changeOrientation(state);
-  moveLeft(copyState);
-  return changeOrientation(copyState);
+  return changeOrientation(moveLeft(changeOrientation(state)));
 }
 
 function moveBot(state: FieldsModelStore) {
-  const copyState = changeOrientation(state);
-  moveRight(copyState);
-  return changeOrientation(copyState);
+  return changeOrientation(moveRight(changeOrientation(state)));
 }
 
-// moveLeft(test);
-console.log(moveBot(test));
-
-fieldsModel.on(moveRightEvent, (state) => {
-  console.log(state);
-});
+$fieldsModel.on(moveRightEvent, moveRight);
+$fieldsModel.on(moveLeftEvent, moveLeft);
+$fieldsModel.on(moveBottomEvent, moveBot);
+$fieldsModel.on(moveTopEvent, moveTop);
 
 function fieldIsNotEmpty(field: Field) {
   return !field.value;
@@ -165,10 +160,10 @@ const getNullableFields = (state: FieldsModelStore) => state.flat(1).filter(fiel
 
 function generateRandomMinimalFields(state: FieldsModelStore) {
   const copyState = [...state];
-  setMinimalValuesToFields(getRandomFields(getNullableFields(copyState), 2));
+  setMinimalValuesToFields(getRandomFields(getNullableFields(copyState), randomBool() ? 2 : 1));
   return copyState;
 }
 
-fieldsModel.on(createRandomFields, generateRandomMinimalFields);
+$fieldsModel.on(createRandomFields, generateRandomMinimalFields);
 
 createRandomFields();

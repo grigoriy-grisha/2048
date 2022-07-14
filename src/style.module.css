@@ -1,0 +1,80 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+
+}
+
+.gameContainer {
+    box-shadow: 0 -1px 12px -1px rgba(0, 0, 0, 0.21) inset;
+    width: 500px;
+    height: 500px;
+    border-radius: 30px;
+    padding:15px;
+    position: relative;
+}
+
+.fieldRow {
+    display: grid;
+    height: 25%;
+}
+
+.fieldItem {
+    position: absolute;
+    min-height: 105px;
+    min-width: 105px;
+    max-height: 105px;
+    max-width: 105px;
+    box-shadow: 3px 4px 12px -4px rgba(5, 38, 64, 0.2);
+    border-radius: 45px;
+    margin: 10px;
+    transition:  2s ease 0s;
+
+}
+
+.fieldItem2 {
+    background: #6A5ACD;
+
+}
+
+.fieldItem4 {
+    background:  #42AAFF;
+
+}
+
+.fieldItem8 {
+    background: #CCCCFF;
+}
+
+.fieldItem16 {
+    background: #E4FF9E;
+}
+
+.fieldItem32 {
+    background: #FFFE83;
+}
+
+.fieldItem64 {
+    background: #FDD73C;
+}
+
+.fieldItem128 {
+    background: #FFB600;
+}
+
+.fieldItem256 {
+    background: #CF7E12;
+}
+
+.fieldItem512 {
+    background: #E15600;
+}
+
+.fieldItem1028 {
+    background: #F73F3F;
+}
+
+.fieldItem2048 {
+    background: #910000;
+}
