@@ -29,8 +29,12 @@
     box-shadow: 3px 4px 12px -4px rgba(5, 38, 64, 0.2);
     border-radius: 45px;
     margin: 10px;
-    transition:  2s ease 0s;
-
+    -webkit-transition: 100ms ease-in-out;
+    -moz-transition: 100ms ease-in-out;
+    transition: 100ms ease-in-out;
+    -webkit-transition-property: -webkit-transform;
+    -moz-transition-property: -moz-transform;
+    transition-property: transform;
 }
 
 .fieldItem2 {

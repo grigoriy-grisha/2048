@@ -23,9 +23,7 @@ $text.on(inputText, (_, text) => text);
 $size.on(inputText, (_, text) => text.length);
 
 const Form = () => {
-  const { fieldsModel } = useUnit({
-    fieldsModel: $fieldsModel,
-  });
+  const { fieldsModel } = useUnit({ fieldsModel: $fieldsModel });
 
   document.addEventListener(
     "keyup",
@@ -42,8 +40,6 @@ const Form = () => {
       if (event.code === "ArrowLeft") {
         moveLeftEvent();
       }
-
-      setTimeout(createRandomFields, 100);
     },
     false,
   );
@@ -63,7 +59,7 @@ const Form = () => {
                       (item.value ? style.fieldItem + " " + style["fieldItem" + item.value] : "")
                     }
                     style={{ left: `${25 * ii()}%`, top: `${25 * i()}%` }}
-                  ></div>
+                  />
                 )}
               </For>
             </div>
