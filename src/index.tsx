@@ -4,6 +4,8 @@ import { createEvent, createStore } from "effector";
 import { useUnit } from "effector-solid";
 import {
   $fieldsModel,
+  $score,
+  $swipes,
   createRandomFields,
   fields,
   moveBottomEvent,
@@ -25,7 +27,7 @@ $text.on(inputText, (_, text) => text);
 $size.on(inputText, (_, text) => text.length);
 
 const Form = () => {
-  const { fieldsModel } = useUnit({ fieldsModel: $fieldsModel });
+  const { fieldsModel, score, swipes } = useUnit({ fieldsModel: $fieldsModel, score: $score, swipes: $swipes });
 
   document.addEventListener(
     "keyup",
@@ -52,6 +54,17 @@ const Form = () => {
 
   return (
     <div class={style.container}>
+      <div class={style.progressContainer}>
+        <div class={style.scoreContainer}>
+          <div class={style.scoreTitle}>Score</div>
+          <div class={style.scoreValue}>{score()}</div>
+        </div>
+        <div class={style.scoreContainer}>
+          <div class={style.scoreTitle}>Swipes</div>
+          <div class={style.scoreValue}>{swipes()}</div>
+        </div>
+      </div>
+
       <div class={style.gameContainer}>
         <For each={fields}>
           {(item, i) => (
@@ -64,7 +77,7 @@ const Form = () => {
                         style.fieldItem +
                         " " +
                         (fieldsModel()[i()][ii()].value
-                          ? style.fieldItem + " " + style["fieldItem" + fieldsModel()[i()][ii()].value]
+                          ? style.filledFieldItem + " " + style["fieldItem" + fieldsModel()[i()][ii()].value]
                           : "")
                       }
                       style={{ left: `${25 * ii()}%`, top: `${25 * i()}%` }}
