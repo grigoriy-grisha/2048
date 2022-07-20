@@ -1,16 +1,19 @@
 import { createEvent, createStore, guard, sample } from "effector";
-import { equals } from "ramda";
+import { clone, equals } from "ramda";
 
 type Field = { value: null | number };
 type Fields = Array<Field>;
-type FieldsModelStore = Array<Array<Field>>;
+export type FieldsModelStore = Array<Array<Field>>;
 
-export const $fieldsModel = createStore<FieldsModelStore>([
+export const fields = [
+  [{ value: 2 }, { value: null }, { value: null }, { value: 2 }],
   [{ value: null }, { value: null }, { value: null }, { value: null }],
   [{ value: null }, { value: null }, { value: null }, { value: null }],
   [{ value: null }, { value: null }, { value: null }, { value: null }],
-  [{ value: null }, { value: null }, { value: null }, { value: null }],
-]);
+];
+
+export const $fieldsModel = createStore<FieldsModelStore>(fields);
+export const $prevModel = createStore<FieldsModelStore>(fields);
 
 const rotate = (matrix: any) => {
   return matrix.map((row: any, i: any) => row.map((val: any, j: any) => matrix[matrix.length - 1 - j][i]));
@@ -23,15 +26,27 @@ export const moveBottomEvent = createEvent();
 export const moveTopEvent = createEvent();
 export const moveLeftEvent = createEvent();
 export const moveRightEvent = createEvent();
+export const setPrevFields = createEvent<FieldsModelStore>();
+
+$prevModel.on(setPrevFields, (_, fields) => fields);
+
+const fieldsMoved = guard({
+  clock: [moveBottomEvent, moveTopEvent, moveLeftEvent, moveRightEvent],
+  source: [$fieldsModel, $prevModel],
+  filter: ([fieldsModel, prevFieldsModel]) => {
+    console.log(equals(fieldsModel, prevFieldsModel));
+    return !equals(fieldsModel, prevFieldsModel);
+  },
+});
 
 sample({
-  clock: [moveBottomEvent, moveTopEvent, moveLeftEvent, moveRightEvent],
+  clock: fieldsMoved,
   fn: () => 1,
   target: createRandomFields,
 });
 
-function moveRight(state: FieldsModelStore) {
-  const copyState = [...state];
+export function moveRight(state: FieldsModelStore) {
+  const copyState = clone(state);
 
   for (let i = 0; i < copyState.length; i++) {
     const item = copyState[i];
@@ -41,24 +56,24 @@ function moveRight(state: FieldsModelStore) {
 
     copyState[i] = [...nulled, ...notNulled];
 
-    for (let j = item.length - 1; j >= 0; j--) {
+    for (let j = copyState[i].length - 1; j >= 0; j--) {
       let prev: any = null;
 
-      if (item[j].value) {
+      if (copyState[i][j].value) {
         for (let k = j; k >= 0; k--) {
           if (prev === null) {
-            prev = item[k];
+            prev = copyState[i][k];
             continue;
           }
 
-          if (item[k].value) {
-            if (prev.value === item[k].value) {
-              item[k].value = item[k].value! * 2;
+          if (copyState[i][k].value) {
+            if (prev.value === copyState[i][k].value) {
+              copyState[i][k].value = copyState[i][k].value! * 2;
               prev.value = null;
             }
           }
 
-          prev = item[k];
+          prev = copyState[i][k];
         }
       }
     }
@@ -69,7 +84,7 @@ function moveRight(state: FieldsModelStore) {
     copyState[i] = [...nulled2, ...notNulled2];
   }
 
-  return equals(copyState, state) ? state : copyState;
+  return copyState;
 }
 
 function moveLeft(state: FieldsModelStore) {

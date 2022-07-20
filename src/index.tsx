@@ -5,10 +5,12 @@ import { useUnit } from "effector-solid";
 import {
   $fieldsModel,
   createRandomFields,
+  fields,
   moveBottomEvent,
   moveLeftEvent,
   moveRightEvent,
   moveTopEvent,
+  setPrevFields,
 } from "./model/fieldsModel";
 import style from "./style.module.css";
 import "./normalize.css";
@@ -28,6 +30,8 @@ const Form = () => {
   document.addEventListener(
     "keyup",
     (event) => {
+      setPrevFields(fieldsModel());
+
       if (event.code === "ArrowDown") {
         moveBottomEvent();
       }
@@ -40,6 +44,8 @@ const Form = () => {
       if (event.code === "ArrowLeft") {
         moveLeftEvent();
       }
+
+      setTimeout(createRandomFields, 100);
     },
     false,
   );
@@ -47,20 +53,24 @@ const Form = () => {
   return (
     <div class={style.container}>
       <div class={style.gameContainer}>
-        <For each={fieldsModel()}>
+        <For each={fields}>
           {(item, i) => (
             <div class={style.fieldRow}>
               <For each={item}>
-                {(item, ii) => (
-                  <div
-                    class={
-                      style.fieldItem +
-                      " " +
-                      (item.value ? style.fieldItem + " " + style["fieldItem" + item.value] : "")
-                    }
-                    style={{ left: `${25 * ii()}%`, top: `${25 * i()}%` }}
-                  />
-                )}
+                {(item, ii) => {
+                  return (
+                    <div
+                      class={
+                        style.fieldItem +
+                        " " +
+                        (fieldsModel()[i()][ii()].value
+                          ? style.fieldItem + " " + style["fieldItem" + fieldsModel()[i()][ii()].value]
+                          : "")
+                      }
+                      style={{ left: `${25 * ii()}%`, top: `${25 * i()}%` }}
+                    />
+                  );
+                }}
               </For>
             </div>
           )}

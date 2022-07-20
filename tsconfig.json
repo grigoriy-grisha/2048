@@ -8,8 +8,13 @@
     "esModuleInterop": true,
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
-    "types": ["vite/client"],
+    "types": ["vite/client","node"],
     "noEmit": true,
-    "isolatedModules": true
-  }
+    "isolatedModules": false
+  },
+  "include": [
+    "src/**/*",
+    "**/*.spec.ts",
+    "**/*.test.ts"
+  ]
 }
