@@ -1,6 +1,7 @@
 .container {
     display: flex;
     justify-content: center;
+    flex-direction: column;
     align-items: center;
     min-height: 100vh;
 
@@ -16,9 +17,39 @@
     transition: 200ms;
 }
 
+.progressContainer {
+    box-shadow: 0 -1px 12px -1px rgba(0, 0, 0, 0.21) inset;
+    margin: 20px;
+    border-radius: 30px;
+    padding:15px;
+    display: flex;
+    gap: 20px;
+}
+
+.scoreContainer {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.scoreTitle {
+    color: #bebebe;
+    padding-bottom: 5px;
+}
+
+.scoreValue {
+    color: #6A5ACD;
+}
+
+
 .fieldRow {
     display: grid;
     height: 25%;
+}
+
+.filledFieldItem {
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 
 .fieldItem {
@@ -27,7 +58,7 @@
     min-width: 105px;
     max-height: 105px;
     max-width: 105px;
-    box-shadow: 3px 4px 12px -4px rgba(5, 38, 64, 0.2);
+
     border-radius: 45px;
     margin: 10px;
     transition:  200ms ease 0s;

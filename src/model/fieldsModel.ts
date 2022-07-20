@@ -6,14 +6,16 @@ type Fields = Array<Field>;
 export type FieldsModelStore = Array<Array<Field>>;
 
 export const fields = [
-  [{ value: 2 }, { value: null }, { value: null }, { value: 2 }],
+  [{ value: null }, { value: null }, { value: null }, { value: null }],
   [{ value: null }, { value: null }, { value: null }, { value: null }],
   [{ value: null }, { value: null }, { value: null }, { value: null }],
   [{ value: null }, { value: null }, { value: null }, { value: null }],
 ];
 
 export const $fieldsModel = createStore<FieldsModelStore>(fields);
-export const $prevModel = createStore<FieldsModelStore>(fields);
+export const $prevFieldsModel = createStore<FieldsModelStore>(fields);
+export const $score = createStore<number>(0);
+export const $swipes = createStore<number>(0);
 
 const rotate = (matrix: any) => {
   return matrix.map((row: any, i: any) => row.map((val: any, j: any) => matrix[matrix.length - 1 - j][i]));
@@ -27,22 +29,37 @@ export const moveTopEvent = createEvent();
 export const moveLeftEvent = createEvent();
 export const moveRightEvent = createEvent();
 export const setPrevFields = createEvent<FieldsModelStore>();
+export const registerSwipe = createEvent();
 
-$prevModel.on(setPrevFields, (_, fields) => fields);
+$swipes.on(registerSwipe, (swipes) => ++swipes);
+
+$prevFieldsModel.on(setPrevFields, (_, fields) => fields);
+
+const moving = [moveBottomEvent, moveTopEvent, moveLeftEvent, moveRightEvent];
 
 const fieldsMoved = guard({
-  clock: [moveBottomEvent, moveTopEvent, moveLeftEvent, moveRightEvent],
-  source: [$fieldsModel, $prevModel],
-  filter: ([fieldsModel, prevFieldsModel]) => {
-    console.log(equals(fieldsModel, prevFieldsModel));
-    return !equals(fieldsModel, prevFieldsModel);
-  },
+  clock: moving,
+  source: [$fieldsModel, $prevFieldsModel],
+  filter: ([fieldsModel, prevFieldsModel]) => !equals(fieldsModel, prevFieldsModel),
 });
 
 sample({
   clock: fieldsMoved,
   fn: () => 1,
   target: createRandomFields,
+});
+
+sample({
+  clock: fieldsMoved,
+  target: registerSwipe,
+});
+
+sample({
+  clock: moving,
+  source: $fieldsModel,
+  fn: (fieldsModel) =>
+    fieldsModel.reduce((acc, row) => acc + row.reduce((acc, field) => acc + Number(field.value), 0), 0),
+  target: $score,
 });
 
 export function moveRight(state: FieldsModelStore) {
