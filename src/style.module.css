@@ -1,112 +1,161 @@
 .container {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
 }
 
 .gameContainer {
-    box-shadow: 0 -1px 12px -1px rgba(0, 0, 0, 0.21) inset;
-    width: 500px;
-    height: 500px;
-    border-radius: 30px;
-    padding:15px;
-    position: relative;
-    transition: 200ms;
+  box-shadow: 0 -1px 12px -1px rgba(0, 0, 0, 0.21) inset;
+  width: 500px;
+  height: 500px;
+  border-radius: 30px;
+  padding: 15px;
+  position: relative;
+  transition: 200ms;
 }
 
 .progressContainer {
-    box-shadow: 0 -1px 12px -1px rgba(0, 0, 0, 0.21) inset;
-    margin: 20px;
-    border-radius: 30px;
-    padding:15px;
-    display: flex;
-    gap: 20px;
+  box-shadow: 0 -1px 12px -1px rgba(0, 0, 0, 0.21) inset;
+  margin: 20px;
+  border-radius: 30px;
+  padding: 15px;
+  display: flex;
+  gap: 20px;
 }
 
 .scoreContainer {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 
 .scoreTitle {
-    color: #bebebe;
-    padding-bottom: 5px;
+  color: #bebebe;
+  padding-bottom: 5px;
 }
 
 .scoreValue {
-    color: #6A5ACD;
+  color: #6a5acd;
 }
 
-
 .fieldRow {
-    display: grid;
-    height: 25%;
+  display: grid;
+  height: 25%;
 }
 
 .filledFieldItem {
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 
 .fieldItem {
-    position: absolute;
-    min-height: 105px;
-    min-width: 105px;
-    max-height: 105px;
-    max-width: 105px;
+  position: absolute;
+  min-height: 105px;
+  min-width: 105px;
+  max-height: 105px;
+  max-width: 105px;
 
-    border-radius: 45px;
-    margin: 10px;
-    transition:  200ms ease 0s;
-
+  border-radius: 45px;
+  margin: 10px;
+  transition: 200ms ease 0s;
 }
 
 .fieldItem2 {
-    background: #6A5ACD;
-
+  background: #6a5acd;
 }
 
 .fieldItem4 {
-    background:  #42AAFF;
-
+  background: #42aaff;
 }
 
 .fieldItem8 {
-    background: #CCCCFF;
+  background: #ccccff;
 }
 
 .fieldItem16 {
-    background: #E4FF9E;
+  background: #e4ff9e;
 }
 
 .fieldItem32 {
-    background: #FFFE83;
+  background: #fffe83;
 }
 
 .fieldItem64 {
-    background: #FDD73C;
+  background: #fdd73c;
 }
 
 .fieldItem128 {
-    background: #FFB600;
+  background: #ffb600;
 }
 
 .fieldItem256 {
-    background: #CF7E12;
+  background: #cf7e12;
 }
 
 .fieldItem512 {
-    background: #E15600;
+  background: #e15600;
 }
 
-.fieldItem1028 {
-    background: #F73F3F;
+.fieldItem1024 {
+  background: #f73f3f;
 }
 
 .fieldItem2048 {
-    background: #910000;
+  background: #910000;
+}
+
+.actionContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.startContainer {
+  height: 100vh;
+  width: 100vw;
+}
+
+.start {
+  box-shadow: 0 -1px 12px -1px rgba(0, 0, 0, 0.21) inset;
+  background: #fff;
+  border-radius: 30px;
+  padding: 70px;
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
+
+.startContent {
+  width: 20px;
+  height: 20px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0 8px 24px;
+  border-radius: 20%;
+  background: #6a5acd;
+  transition: 160ms;
+}
+
+.start:hover .startContent {
+  box-shadow: rgba(0, 0, 0, 0.22) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 4px 6px;
+}
+
+.start:focus .startContent {
+  box-shadow: rgba(0, 0, 0, 0.22) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 4px 6px;
+}
+
+.backToMenu {
+  background: #6a5acd;
+  border-radius: 30%;
+  box-shadow: rgba(149, 157, 165, 0.2) 0 8px 24px;
+  padding: 10px 20px;
+  outline: none;
+}
+
+.actionText {
+  color: #6a5acd;
+  font-weight: 700;
+  font-size: 25px;
 }
