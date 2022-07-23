@@ -7,14 +7,14 @@ import {
   $gameState,
   $record,
   $score,
-  $swipes,
-  createRandomFields,
+  fetchRecordFx,
   fields,
   GameState,
   moveBottomEvent,
   moveLeftEvent,
   moveRightEvent,
   moveTopEvent,
+  sendRecordFx,
   setPrevFields,
   startClicked,
   toMainMenuClicked,
@@ -32,17 +32,20 @@ $text.on(inputText, (_, text) => text);
 $size.on(inputText, (_, text) => text.length);
 
 const Form = () => {
-  const { fieldsModel, score, swipes, gameState, record } = useUnit({
+  const { fieldsModel, score, gameState, record, loadData, sendRecordLoading } = useUnit({
     fieldsModel: $fieldsModel,
     score: $score,
-    swipes: $swipes,
     gameState: $gameState,
     record: $record,
+    loadData: fetchRecordFx.pending,
+    sendRecordLoading: sendRecordFx.pending,
   });
 
   document.addEventListener(
     "keyup",
     (event) => {
+      if (gameState() !== GameState.IN_GAME) return;
+
       setPrevFields(fieldsModel());
 
       if (event.code === "ArrowDown") {
@@ -57,15 +60,21 @@ const Form = () => {
       if (event.code === "ArrowLeft") {
         moveLeftEvent();
       }
-
-      setTimeout(createRandomFields, 100);
     },
     false,
   );
 
   return (
     <>
-      {gameState() === GameState.START && (
+      {loadData() && (
+        <div class={style.actionContainer + " " + style.startContainer}>
+          <div class={style.actionText}>LOADING</div>
+          <div class={style.innerBlock}>
+            <div class={style.loadingBlock} />
+          </div>
+        </div>
+      )}
+      {!loadData() && gameState() === GameState.START && (
         <div class={style.actionContainer + " " + style.startContainer}>
           <div class={style.actionText}>START</div>
           <button class={style.start} onClick={startClicked}>
@@ -78,31 +87,39 @@ const Form = () => {
           <div class={style.progressContainer}>
             <div class={style.scoreContainer}>
               <div class={style.scoreTitle}>Record</div>
-              <div class={style.scoreValue}>{record()}</div>
+              <div class={style.recordValue}>{record()}</div>
             </div>
             <div class={style.scoreContainer}>
               <div class={style.scoreTitle}>Score</div>
               <div class={style.scoreValue}>{score()}</div>
             </div>
-            <div class={style.scoreContainer}>
-              <div class={style.scoreTitle}>Swipes</div>
-              <div class={style.scoreValue}>{swipes()}</div>
-            </div>
           </div>
           {gameState() === GameState.FAIL && (
             <div class={style.actionContainer}>
               <div class={style.actionText}>FAIL</div>
-              <button class={style.start} onClick={toMainMenuClicked}>
-                <div class={style.startContent} />
-              </button>
+              {sendRecordLoading() ? (
+                <div class={style.innerBlock}>
+                  <div class={style.loadingBlock} />
+                </div>
+              ) : (
+                <button class={style.start} onClick={toMainMenuClicked}>
+                  <div class={style.startContent} />
+                </button>
+              )}
             </div>
           )}
           {gameState() === GameState.WON && (
             <div class={style.actionContainer}>
               <div class={style.actionText}>WON</div>
-              <button class={style.start} onClick={toMainMenuClicked}>
-                <div class={style.startContent} />
-              </button>
+              {sendRecordLoading() ? (
+                <div class={style.innerBlock}>
+                  <div class={style.loadingBlock} />
+                </div>
+              ) : (
+                <button class={style.start} onClick={toMainMenuClicked}>
+                  <div class={style.startContent} />
+                </button>
+              )}
             </div>
           )}
           {gameState() === GameState.IN_GAME && (
