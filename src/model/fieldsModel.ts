@@ -49,18 +49,18 @@ export const moveLeftEvent = createEvent();
 export const moveRightEvent = createEvent();
 export const setPrevFields = createEvent<FieldsModelStore>();
 export const startClicked = createEvent<any>();
-export const toMainMenuClicked = createEvent<any>();
 export const wonState = createEvent();
 export const failState = createEvent();
 export const setRecord = createEvent<number>();
 
+$score.reset(startClicked);
+
 $gameState
   .on(startClicked, () => GameState.IN_GAME)
-  .on(toMainMenuClicked, () => GameState.START)
   .on(wonState, () => GameState.WON)
   .on(failState, () => GameState.FAIL);
 
-$prevFieldsModel.on(setPrevFields, (_, fields) => fields).reset(toMainMenuClicked);
+$prevFieldsModel.on(setPrevFields, (_, fields) => fields).reset(startClicked);
 
 $record.on(fetchRecordFx.doneData, (_, record) => record).on(setRecord, (_, record) => record);
 
@@ -214,7 +214,7 @@ $fieldsModel
   .on(moveLeftEvent, moveLeft)
   .on(moveBottomEvent, moveBot)
   .on(moveTopEvent, moveTop)
-  .reset(toMainMenuClicked);
+  .reset(startClicked);
 
 function fieldIsNotEmpty(field: Field) {
   return !field.value;
