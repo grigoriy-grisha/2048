@@ -1,5 +1,6 @@
 import { createEffect, createEvent, createStore, guard, sample } from "effector";
 import { clone, equals } from "ramda";
+import { wait } from "../urils/wait";
 
 type Field = { value: null | number };
 type Fields = Array<Field>;
@@ -20,17 +21,18 @@ export enum GameState {
 }
 
 export const fetchRecordFx = createEffect(async () => {
+  await wait(2500);
   return Number(localStorage.getItem("record"));
 });
 
 export const sendRecordFx = createEffect(async (record: number) => {
+  await wait(1500);
   return Number(localStorage.setItem("record", String(record)));
 });
 
 export const $fieldsModel = createStore<FieldsModelStore>(fields);
 export const $prevFieldsModel = createStore<FieldsModelStore>(fields);
 export const $score = createStore<number>(0);
-export const $swipes = createStore<number>(0);
 export const $gameState = createStore<GameState>(GameState.START);
 export const $record = createStore<number>(0);
 
@@ -46,22 +48,19 @@ export const moveTopEvent = createEvent();
 export const moveLeftEvent = createEvent();
 export const moveRightEvent = createEvent();
 export const setPrevFields = createEvent<FieldsModelStore>();
-export const registerSwipe = createEvent();
 export const startClicked = createEvent<any>();
-export const toMainMenuClicked = createEvent<any>();
 export const wonState = createEvent();
 export const failState = createEvent();
 export const setRecord = createEvent<number>();
 
+$score.reset(startClicked);
+
 $gameState
   .on(startClicked, () => GameState.IN_GAME)
-  .on(toMainMenuClicked, () => GameState.START)
   .on(wonState, () => GameState.WON)
   .on(failState, () => GameState.FAIL);
 
-$swipes.on(registerSwipe, (swipes) => ++swipes);
-
-$prevFieldsModel.on(setPrevFields, (_, fields) => fields).reset(toMainMenuClicked);
+$prevFieldsModel.on(setPrevFields, (_, fields) => fields).reset(startClicked);
 
 $record.on(fetchRecordFx.doneData, (_, record) => record).on(setRecord, (_, record) => record);
 
@@ -77,11 +76,6 @@ sample({
   clock: fieldsMoved,
   fn: () => 1,
   target: createRandomFields,
-});
-
-sample({
-  clock: fieldsMoved,
-  target: registerSwipe,
 });
 
 const computeScore = (fieldsModel: FieldsModelStore) => {
@@ -220,7 +214,7 @@ $fieldsModel
   .on(moveLeftEvent, moveLeft)
   .on(moveBottomEvent, moveBot)
   .on(moveTopEvent, moveTop)
-  .reset(toMainMenuClicked);
+  .reset(startClicked);
 
 function fieldIsNotEmpty(field: Field) {
   return !field.value;
@@ -262,4 +256,4 @@ function generateRandomMinimalFields(state: FieldsModelStore, payload: number) {
 $fieldsModel.on(createRandomFields, generateRandomMinimalFields);
 
 createRandomFields(2);
-await fetchRecordFx();
+fetchRecordFx();

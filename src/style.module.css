@@ -38,7 +38,13 @@
 }
 
 .scoreValue {
+  font-weight: 500;
   color: #6a5acd;
+}
+
+.recordValue {
+  font-weight: 500;
+  color: #cf7e12;
 }
 
 .fieldRow {
@@ -119,14 +125,38 @@
   width: 100vw;
 }
 
+.innerBlock {
+  box-shadow: 0 -1px 12px -1px rgba(0, 0, 0, 0.21) inset;
+  background: #fff;
+  border-radius: 30px;
+  width: 120px;
+  height: 120px;
+
+  position: relative;
+}
+
+.loadingBlock {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0 8px 24px;
+  border-radius: 20%;
+  background: #6a5acd;
+  animation: load 3s infinite;
+}
+
 .start {
   box-shadow: 0 -1px 12px -1px rgba(0, 0, 0, 0.21) inset;
   background: #fff;
   border-radius: 30px;
-  padding: 70px;
+  width: 120px;
+  height: 120px;
   outline: none;
   border: none;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .startContent {
@@ -158,4 +188,31 @@
   color: #6a5acd;
   font-weight: 700;
   font-size: 25px;
+}
+
+@keyframes load {
+  0% {
+    top: 10%;
+    left: 10%;
+  }
+
+  25% {
+    top: 10%;
+    left: 75%;
+  }
+
+  50% {
+    top: 75%;
+    left: 75%;
+  }
+
+  75% {
+    top: 75%;
+    left: 10%;
+  }
+
+  100% {
+    top: 10%;
+    left: 10%;
+  }
 }
